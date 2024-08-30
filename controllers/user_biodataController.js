@@ -137,7 +137,7 @@ exports.login = async (req, res) => {
 
     // Create JWT Token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30m", // Set token expiration to 1 minutes
+      expiresIn: "30m", // Set token expiration to 30 minutes
     });
 
     // Set the JWT as an HttpOnly, Secure, and SameSite cookie
@@ -145,7 +145,7 @@ exports.login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 30 * 60 * 1000, // Set cookie expiration to 1 minutes
+      maxAge: 30 * 60 * 1000, // Set cookie expiration to 30 minutes
     });
 
     // Send a success response
