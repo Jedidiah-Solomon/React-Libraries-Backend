@@ -8,6 +8,8 @@ const app = express();
 
 const PORT = process.env.PORT;
 
+const HOST = process.env.HOST;
+
 // Connect to database
 connectDB();
 
@@ -39,5 +41,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on ${protocol}://${HOST}:${PORT}`);
 });
