@@ -41,5 +41,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on ${protocol}://${HOST}:${PORT}`);
+  console.log(`Server is running on ${HOST}`);
 });
