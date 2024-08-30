@@ -90,7 +90,7 @@ exports.signup = async (req, res) => {
         address: process.env.USER,
       },
       to: email,
-      subject: "Welcome on Board, I am Jedidiah🤝",
+      subject: "Welcome on Board, I am Jedidiah",
       text: `Hi ${fullName},\n\nThank you for signing up for my service! I am excited to have you on board.\n\nBest regards,\nJedidiah Solomon, Software Developer\n\nCheck out my LinkedIn: https://is.gd/fcc4g0`, // Plain text body
       html: `
         <html>

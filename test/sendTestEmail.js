@@ -19,48 +19,55 @@ const sendTestEmail = async () => {
       from: process.env.USER, // sender address
       to: "jedybrownventures@gmail.com", // list of receivers
       subject: "Hello ✔", // Subject line
-      text: "Hello world?", // plain text body
+      // text: "Hello world 222 ?", // plain text body
+      text: `Hello World!
+
+Thank you for testing our email service. This email is styled with basic HTML formatting.
+
+Best regards,
+Your Name
+
+Check out our website for more information: https://example.com`,
       html: `
-        <html>
-          <head>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 20px;
-              }
-              .container {
-                max-width: 600px;
-                margin: auto;
-                background: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              }
-              h1 {
-                color: #333;
-              }
-              p {
-                color: #555;
-              }
-              a {
-                color: #1a73e8;
-                text-decoration: none;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <h1>Hello World!</h1>
-              <p>Thank you for testing our email service. This email is styled with CSS and includes HTML content.</p>
-              <p>Best regards,</p>
-              <p><strong>Your Name</strong></p>
-              <p>Check out <a href="https://example.com" target="_blank">our website</a> for more information.</p>
-            </div>
-          </body>
-        </html>
-      `, // HTML body content
+              <html>
+        <body style="font-family: Arial, sans-serif;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 20px;">
+            <tr>
+              <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; padding: 20px; border: 1px solid #ddd;">
+                  <tr>
+                    <td align="center">
+                      <h1 style="color: #333333; margin: 0;">Hello World 22223!</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color: #555555; padding-top: 20px;">
+                      <p style="margin: 0;">Thank you for testing our email service. This email is styled with basic HTML formatting.</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <p style="margin: 0;">Best regards,</p>
+                      <p style="margin: 0;"><strong>Your Name</strong></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <p style="margin: 0;">
+                        Check out
+                        <a href="https://example.com" style="color: #1a73e8;">our website</a>
+                        for more information.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+
+            `, // HTML body content
     });
 
     // Log the message ID for debugging
@@ -73,3 +80,5 @@ const sendTestEmail = async () => {
 
 // Call the function to send an email
 sendTestEmail();
+
+//node test/sendTestEmail.js
