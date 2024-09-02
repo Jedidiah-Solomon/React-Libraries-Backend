@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const redisClient = require("../config/redisClient");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
@@ -90,7 +91,7 @@ exports.signup = async (req, res) => {
         address: process.env.USER,
       },
       to: email,
-      subject: "Welcome on Board, I am Jedidiah",
+      subject: "Welcome on Board, I am Jedidiah🤝",
       text: `Hi ${fullName},\n\nThank you for signing up for my service! I am excited to have you on board.\n\nBest regards,\nJedidiah Solomon, Software Developer\n\nCheck out my LinkedIn: https://is.gd/fcc4g0`, // Plain text body
       html: `
         <html>
@@ -109,6 +110,9 @@ exports.signup = async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
     console.log(`Message sent: ${info.messageId}`);
 
+    // Cache the new user's data in Redis (set to expire in 1 hour)
+    await redisClient.setEx(email, 3600, JSON.stringify(newUser));
+
     // Respond to the client
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -123,34 +127,42 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the user exists
-    const user = await UserBiodata.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+    // Check Redis cache first
+    const cachedUserData = await redisClient.get(email);
+    let user;
+
+    if (cachedUserData) {
+      console.log("Serving from Redis cache");
+      user = JSON.parse(cachedUserData);
+    } else {
+      user = await UserBiodata.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+
+      // Store user data in Redis cache (set to expire in 1 hour)
+      await redisClient.setEx(email, 3600, JSON.stringify(user));
     }
 
-    // Compare the provided password with the hashed password in the database
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Create JWT Token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30m", // Set token expiration to 30 minutes
+      expiresIn: "1m",
     });
 
-    // Set the JWT as an HttpOnly, Secure, and SameSite cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      maxAge: 30 * 60 * 1000, // Set cookie expiration to 30 minutes
+      sameSite: "Strict",
+      maxAge: 1 * 60 * 1000,
     });
 
-    // Send a success response
     res.status(200).json({ message: "Logged in successfully" });
   } catch (error) {
+    console.error("Error logging in:", error);
     res.status(500).json({ message: "Error logging in", error: error.message });
   }
 };
